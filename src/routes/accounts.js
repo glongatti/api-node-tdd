@@ -1,8 +1,19 @@
 
 const express = require('express');
 
+const RecursoIndevidoError = require('../errors/RecursoIndevidoError');
+
 module.exports = (app) => {
   const router = express.Router();
+
+  // Middleware que so vai ser ativado quando ter id na url
+  router.param('id', (req, res, next) => {
+    app.services.account.find({ id: req.params.id })
+      .then((acc) => {
+        if (acc.user_id !== req.user.id) throw new RecursoIndevidoError();
+        else next();
+      }).catch((err) => next(err));
+  });
 
   router.post('/', (req, res, next) => {
     app.services.account.save({ ...req.body, user_id: req.user.id })
