@@ -11,7 +11,7 @@ consign({ cwd: 'src', verbose: false }) // Seta o src como diretorio padrão par
   .include('./config/middlewares.js')
   .then('./services')
   .then('./routes')
-  .then('./config/routes.js')
+  .then('./config/router.js')
   .into(app);
 
 app.use((err, req, res, next) => {

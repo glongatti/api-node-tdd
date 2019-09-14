@@ -1,6 +1,8 @@
 const request = require('supertest');
 const app = require('../../src/app');
 
+const MAIN_ROUTE = '/v1/auth';
+
 test('Deve criar usuario via signup', () => {
   const email = `${Date.now()}@gmail.com`;
 
@@ -51,7 +53,7 @@ test('Não deve autenticar usuário que não existe', () => {
 });
 
 test('Não deve acessar uma rota protegida sem token', () => {
-  return request(app).get('/users').then((res) => {
+  return request(app).get('/v1/users').then((res) => {
     expect(res.status).toBe(401);
   });
 });
