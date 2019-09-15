@@ -59,3 +59,16 @@ test('Deve inserir uma transação com sucesso', () => {
       expect(res.body.acc_id).toBe(accUser.id);
     });
 });
+
+test('Deve retornar uma transação por ID', () => {
+  return app.db('transactions').insert({
+    description: 'T ID', date: new Date(), ammount: 100, type: 'I', acc_id: accUser.id,
+  }, ['id']).then((res) => request(app).get(`${MAIN_ROUTE}/${res[0].id}`)
+    .set('authorization', `bearer ${user.token}`)
+    .then((result) => {
+      expect(result.status).toBe(200);
+      expect(result.body.id).toBe(res[0].id);
+      expect(result.body.description).toBe('T ID');
+    }));
+
+});
