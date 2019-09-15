@@ -31,7 +31,7 @@ beforeAll(async () => {
 
 test('Deve listar apenas as transações do usuário', () => {
   // 2 usuários, 2 contas , 2 transações
-  console.log('acc user', accUser)
+
   return app.db('transactions').insert([
     {
       description: 'T1', date: new Date(), ammount: 100, type: 'I', acc_id: accUser.id,
@@ -46,4 +46,16 @@ test('Deve listar apenas as transações do usuário', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].description).toBe('T1');
     }));
+});
+
+test('Deve inserir uma transação com sucesso', () => {
+  return request(app).post(MAIN_ROUTE)
+    .set('authorization', `bearer ${user.token}`)
+    .send({
+      description: 'New T', date: new Date(), ammount: 100, type: 'I', acc_id: accUser.id,
+    })
+    .then((res) => {
+      expect(res.status).toBe(201);
+      expect(res.body.acc_id).toBe(accUser.id);
+    });
 });
