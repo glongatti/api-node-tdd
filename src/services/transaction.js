@@ -13,7 +13,11 @@ module.exports = (app) => {
   };
 
   const save = (transaction) => {
-    return app.db('transactions').insert(transaction, '*');
+    const newTransaction = { ...transaction };
+    if ((transaction.type === 'I' && transaction.ammount < 0) || (transaction.type === 'O' && transaction.ammount > 0)) {
+      newTransaction.ammount *= -1;
+    }
+    return app.db('transactions').insert(newTransaction, '*');
   };
 
   const update = (id, transaction) => {
