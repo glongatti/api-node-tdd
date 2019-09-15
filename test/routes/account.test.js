@@ -7,7 +7,7 @@ const MAIN_ROUTE = '/v1/accounts';
 let user;
 let user2;
 
-beforeEach(async () => {
+beforeAll(async () => {
   const res = await app.services.user.save({ name: 'User account', email: `${Date.now()}@mail.com`, password: '123456F' });
   user = { ...res[0] };
   user.token = jwt.encode(user, 'Segredo!!');
@@ -16,7 +16,10 @@ beforeEach(async () => {
   user2 = { ...res2[0] };
 });
 
-test('Deve listar apenas as contas do usuário', () => {
+test('Deve listar apenas as contas do usuário', async () => {
+  await app.db('transactions').del();
+  await app.db('accounts').del();
+
   return app.db('accounts').insert([
     {
       name: 'Acc User #1', user_id: user.id,
